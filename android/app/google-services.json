@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "57100067205",
+    "firebase_url": "https://drovak-1bd46.firebaseio.com",
+    "project_id": "drovak-1bd46",
+    "storage_bucket": "drovak-1bd46.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57100067205:android:87474b2f7e9edc9523e4ec",
+        "android_client_info": {
+          "package_name": "com.perennial.code.fluttertraffic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "57100067205-b6aotbchn8fnshs3nc18fgc9jlhercn2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.perennial.code.fluttertraffic",
+            "certificate_hash": "4bebf4e46497c34c5638be4665f37e981cf2396f"
+          }
+        },
+        {
+          "client_id": "57100067205-rssdvjpavednt1cid4q65v1enga93md9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMlOv8FffI3thCrQBBDWPru-W3A_SAODE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57100067205-rssdvjpavednt1cid4q65v1enga93md9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
