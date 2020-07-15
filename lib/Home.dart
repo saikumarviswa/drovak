@@ -1,12 +1,20 @@
 
 
+import 'dart:isolate';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertraffic/AboutUs.dart';
 import 'package:fluttertraffic/FadeAnimation.dart';
+import 'package:fluttertraffic/LogInWithOTP.dart';
+import 'package:fluttertraffic/ReceivedPosts.dart';
 import 'package:fluttertraffic/UserProfile.dart';
 import 'package:fluttertraffic/VehiclesData/VehicalList.dart';
+import 'package:fluttertraffic/YourPosts.dart';
 
 import 'MyAlerts.dart';
+import 'main.dart';
 
 class HomePage extends StatefulWidget{
 
@@ -17,6 +25,66 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePage extends State<HomePage>{
+
+  String tok;
+  FirebaseMessaging firebaseMessaging;
+
+  @override
+  void initstate(){
+    super.initState();
+
+    firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        setState(() {
+          // _messageText = "Push Messaging message: $message";
+        });
+        /*print("onMessage: $message");*/
+
+        print("onMessage: $message");
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: ListTile(
+              title: Text(message['notification']['title']),
+              subtitle: Text(message['notification']['body']),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Ok'),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+            ],
+          ),
+        );
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        setState(() {
+          //_messageText = "Push Messaging message: $message";
+        });
+        print("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        setState(() {
+          //_messageText = "Push Messaging message: $message";
+        });
+        print("onResume: $message");
+      },
+    );
+    firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+    firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      setState(() {
+        print(token);
+        tok = token;
+      });
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -80,11 +148,11 @@ class _HomePage extends State<HomePage>{
                           Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyAlerts()));
                         }
                     ),new ListTile(
-                        title: new Text("Posts"),
-                        trailing: new Icon(Icons.arrow_upward),
+                        title: new Text("Reports"),
+                        trailing: new Icon(Icons.receipt),
                         onTap: () {
                           //Navigator.of(context).pop();
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new VehicleList()));
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new YourPosts()));
                         }
                     ),
                     new ListTile(
@@ -92,7 +160,7 @@ class _HomePage extends State<HomePage>{
                         trailing: new Icon(Icons.arrow_downward),
                         onTap: () {
                           //Navigator.of(context).pop();
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new VehicleList()));
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new ReceivedPosts()));
                         }
                     ),
                     /*new ListTile(
@@ -108,7 +176,10 @@ class _HomePage extends State<HomePage>{
                     new ListTile(
                       title: new Text("LogOut"),
                       trailing: new Icon(Icons.cancel),
-                      onTap: () => Navigator.of(context).pop(),
+                      onTap: () {
+                        Route route = MaterialPageRoute(builder: (context) => LoginPage());
+                        Navigator.pushReplacement(context, route);
+                      }
                     )
                   ],
                 ),

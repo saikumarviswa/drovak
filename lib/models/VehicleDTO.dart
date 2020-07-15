@@ -1,90 +1,113 @@
+import 'package:fluttertraffic/common/common.util.dart';
+
+import 'RegistrationDTO.dart';
 import 'RegistrationDTO.dart';
 import 'VehicleMakeTypeDTO.dart';
+import 'VehicleMakeTypeDTO.dart';
+import 'VehicleTypeDTO.dart';
 import 'VehicleTypeDTO.dart';
 
-class VehicleDTO{
+class VehicleDTO {
+  int id;
+  int vehicleTypeId;
+  int regId;
+  String regNumber;
+  String model;
+  int vehicleMakeId;
+  String rCNumber;
+  String oDOMeter;
+  String state;
+  String year;
+  bool isActive;
+  int createdBy;
+  String createdOn;
+  int updatedBy;
+  String updatedOn;
+  RegistrationDTO registration;
+  VehicleMakeTypeDTO vehicleMakeType;
+  VehicleTypeDTO vehicleType;
 
-  int Id;
-  int VehicleTypeId;
-  int RegId;
-  String RegNumber;
-  String Model;
-  int VehicleMakeId;
-  String RCNumber;
-  String ODOMeter;
-  String State;
-  String Year;
-  bool IsActive;
-  int CreatedBy;
-  DateTime CreatedOn;
-  int UpdatedBy;
-  DateTime UpdatedOn;
-  RegistrationDTO Registration;
-  VehicleMakeTypeDTO VehicleMakeType;
-  VehicleTypeDTO VehicleType;
+  VehicleDTO(
+      {this.id,
+      this.vehicleMakeId,
+      this.regId,
+      this.regNumber,
+      this.model,
+      this.vehicleTypeId,
+      this.rCNumber,
+      this.oDOMeter,
+      this.state,
+      this.year,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.updatedBy,
+      this.updatedOn,
+      this.registration,
+      this.vehicleMakeType,
+      this.vehicleType});
 
-  VehicleDTO({this.Id,
-    this.VehicleMakeId,
-    this.RegId,
-    this.RegNumber,
-    this.Model,
-    this.VehicleTypeId,
-    this.RCNumber,
-    this.ODOMeter,
-    this.State,
-    this.Year,
-    this.IsActive,
-    this.CreatedBy,
-    this.CreatedOn,
-    this.UpdatedBy,
-    this.UpdatedOn,
-    this.Registration,
-    this.VehicleMakeType,
-    this.VehicleType
-
-  });
-
-  factory VehicleDTO.fromJson(Map<String, dynamic> json){
+  factory VehicleDTO.fromJson(Map<String, dynamic> json) {
     return VehicleDTO(
-      Id: json["Id"],
-      VehicleMakeId: json["VehicleMakeId"],
-      RegId: json["RegId"],
-      RegNumber: json["RegNumber"],
-      Model: json["Model"],
-      VehicleTypeId: json["VehicleTypeId"],
-      RCNumber: json["RCNumber"],
-      ODOMeter: json["ODOMeter"],
-      State: json["State"],
-      Year: json["Year"],
-      IsActive: json["IsActive"],
-      CreatedBy: json["CreatedBy"],
-      CreatedOn: json["CreatedOn"],
-      UpdatedBy: json["UpdatedBy"],
-      UpdatedOn: json["UpdatedOn"],
-      Registration: json["RegistrationDTO"],
-      VehicleMakeType: json["VehicleMakeType"],
-      VehicleType: json["VehicleType"],
+      id: json["Id"],
+      vehicleMakeId: json["VehicleMakeId"],
+      regId: json["RegId"],
+      regNumber: json["RegNumber"],
+      model: json["Model"],
+      vehicleTypeId: json["VehicleTypeId"],
+      rCNumber: json["RCNumber"],
+      oDOMeter: json["ODOMeter"],
+      state: json["State"],
+      year: json["Year"],
+      isActive: json["IsActive"],
+      createdBy: json["CreatedBy"],
+      createdOn: json["CreatedOn"],
+      updatedBy: json["UpdatedBy"],
+      updatedOn: json["UpdatedOn"],
+
+      registration: json["RegistrationDTO"] != null? RegistrationDTO.fromJson(json["RegistrationDTO"]):null,
+      vehicleMakeType: json["VehicleMakeType"] != null? VehicleMakeTypeDTO.fromJson(json["VehicleMakeType"]):null,
+      vehicleType: json["VehicleType"]!= null? VehicleTypeDTO.fromJson(json["VehicleType"]):null
     );
   }
 
-  Map<String,dynamic> toJson() => {
-    'Id' : Id,
-    'VehicleMakeId' : VehicleMakeId,
-    'RegId' : RegId,
-    'RegNumber' : RegNumber,
-    'Model' : Model,
-    'VehicleTypeId' : VehicleTypeId,
-    'RCNumber' : RCNumber,
-    'ODOMeter' : ODOMeter,
-    'State' : State,
-    'Year' : Year,
-    'IsActive' : IsActive,
-    'CreatedBy' : CreatedBy,
-    'CreatedOn' : CreatedOn,
-    'UpdatedBy' : UpdatedBy,
-    'UpdatedOn' : UpdatedOn,
-    'RegistrationDTO' : RegistrationDTO,
-    'VehicleMakeType' : VehicleMakeType,
-    'VehicleType' : VehicleType,
-  };
+  Map<String, dynamic> toJson() => {
+        'Id': id,
+        'VehicleMakeId': vehicleMakeId,
+        'RegId': regId,
+        'RegNumber': regNumber,
+        'Model': model,
+        'VehicleTypeId': vehicleTypeId,
+        'RCNumber': rCNumber,
+        'ODOMeter': oDOMeter,
+        'State': state,
+        'Year': year,
+        'IsActive': isActive,
+        'CreatedBy': createdBy,
+        'CreatedOn': createdOn,
+        'UpdatedBy': updatedBy,
+        'UpdatedOn': updatedOn,
+        'RegistrationDTO': registration != null? registration.toJson():null,
+        'VehicleMakeType': vehicleMakeType != null? vehicleMakeType.toString():null,
+        'VehicleType': vehicleType != null? vehicleType.toJson():null
+      };
+
+  static List<VehicleDTO> parseToList(List<dynamic> dynamicList) {
+    if (dynamicList == null) return null;
+    List<Map<String, dynamic>> jsonArray =
+        CommonUtil.getListOfMaps(dynamicList);
+    List<VehicleDTO> ods = new List<VehicleDTO>();
+    for (Map<String, dynamic> odjson in jsonArray) {
+      ods.add(new VehicleDTO.fromJson(odjson));
+    }
+    return ods;
+  }
+
+  static List<Map<String, dynamic>> parseToMapArray(List<VehicleDTO> odts) {
+    List<Map<String, dynamic>> odtarry = new List<Map<String, dynamic>>();
+    if (odts != null && odts.length > 0) {
+      odts.forEach((odt) => {odtarry.add(odt.toJson())});
+    }
+    return odtarry;
+  }
 }

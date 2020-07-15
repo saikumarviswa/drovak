@@ -2,13 +2,19 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fluttertraffic/common/rest.service.dart';
+import 'package:fluttertraffic/models/VehicleDTO.dart';
+import 'package:fluttertraffic/models/VehicleMakeTypeDTO.dart';
+import 'package:fluttertraffic/models/VehicleTypeDTO.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'FadeAnimation.dart';
+import 'dropdown/item.dart';
 
 class AddYourVehicle extends StatefulWidget{
-
+  String text = "Vehicle Type";
   AddYourVehicle({Key key}) : super(key : key);
 
   _AddYourVehicle createState() => _AddYourVehicle();
@@ -19,6 +25,31 @@ class _AddYourVehicle extends State<AddYourVehicle>{
 
   File imageFile;
   String dropdownValue = 'One';
+
+
+  GlobalKey actionKey;
+  GlobalKey actionKey1;
+  double height, width, xPosition, yPosition;
+
+  bool isDropdownOpened = false;
+  OverlayEntry floatingDropdown;
+  bool isDropdownOpened1 = false;
+  OverlayEntry floatingDropdown1;
+  TextEditingController vehicleNumberController = new TextEditingController();
+  TextEditingController vehicleModelController = new TextEditingController();
+  TextEditingController vehicleRCNumberController = new TextEditingController();
+  TextEditingController vehicleODOController = new TextEditingController();
+  TextEditingController vehicleStateController = new TextEditingController();
+  TextEditingController vehicleYearController = new TextEditingController();
+  Item selectedType,selectCompany;
+
+  @override
+  void initState() {
+    actionKey = LabeledGlobalKey(widget.text);
+    actionKey1 = LabeledGlobalKey("Vehicle Maker");
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,6 +115,7 @@ class _AddYourVehicle extends State<AddYourVehicle>{
                           SizedBox(height: 10),
                           FadeAnimation(1.6,
                               Container(
+                                  width:350 ,
                                   decoration: BoxDecoration(
                                       color: Colors.white,
                                       borderRadius: BorderRadius.circular(10),
@@ -93,70 +125,30 @@ class _AddYourVehicle extends State<AddYourVehicle>{
                                           offset: Offset(0, 10)
                                       )]
                                   ),
-                                  child: Row(
-                                    children: <Widget>[
-                                      new Text("VehicleType" ,style: TextStyle(color: Colors.black,fontSize: 15),),
-                                      SizedBox(width: 20,),
-                                      DropdownButton<String>(
-                                        value: dropdownValue,
-                                        icon: Icon(Icons.keyboard_arrow_down),
-                                        iconSize: 24,
-                                        elevation: 16,
-                                          onChanged: (String newValue) {
-                                            setState(() {
-                                              dropdownValue = newValue;
-                                            });
-                                          },
-                                          items: <String>['One', 'Two', 'Free', 'Four']
-                                              .map<DropdownMenuItem<String>>((String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList()
-                                      ),
-                                    ],
-                                  ),
-                                  /*child:DropdownButton<String>(
-                                    value: dropdownValue,
-                                    icon: Icon(Icons.keyboard_arrow_down),
-                                    iconSize: 24,
-                                    elevation: 16,
-                                    *//*style: TextStyle(color: Colors.deepPurple),*//*
-                                    *//*underline: Container(
-                                      height: 2,
-                                      color: Colors.deepPurpleAccent,
-                                    ),*//*
-                                    onChanged: (String newValue) {
+                                  child: DropdownButton<Item>(
+                                    hint:  Text("  Vehicle makers"),
+                                    value: selectedType,
+                                    onChanged: (Item Value) {
                                       setState(() {
-                                        dropdownValue = newValue;
+                                        selectedType = Value;
                                       });
                                     },
-                                    items: <String>['One', 'Two', 'Free', 'Four']
-                                        .map<DropdownMenuItem<String>>((String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
+                                    items: users.map((Item user) {
+                                      return  DropdownMenuItem<Item>(
+                                        value: user,
+                                        child: Row(
+                                          children: <Widget>[
+                                            user.icon,
+                                            SizedBox(width: 10,),
+                                            Text(
+                                              user.name,
+                                              style:  TextStyle(color: Colors.black),
+                                            ),
+                                          ],
+                                        ),
                                       );
                                     }).toList(),
-                                  )*/
-                                /*child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      padding: EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                          border: Border(bottom: BorderSide(color: Colors.grey[200]))
-                                      ),
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                            hintText: "Vehicle Type",
-                                            hintStyle: TextStyle(color: Colors.grey),
-                                            border: InputBorder.none
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),*/
+                                  ),
                               )
                           ),
                           SizedBox(height: 10,),
@@ -193,6 +185,7 @@ class _AddYourVehicle extends State<AddYourVehicle>{
                           SizedBox(height: 10,),
                           FadeAnimation(2.2,
                               Container(
+                                width: 350,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10),
@@ -202,30 +195,31 @@ class _AddYourVehicle extends State<AddYourVehicle>{
                                         offset: Offset(0, 10)
                                     )]
                                 ),
-                                child: Row(
-                                  children: <Widget>[
-                                    new Text("Vehicle Make" ,style: TextStyle(color: Colors.black,fontSize: 15),),
-                                    SizedBox(width: 20,),
-                                    DropdownButton<String>(
-                                        value: dropdownValue,
-                                        icon: Icon(Icons.keyboard_arrow_down),
-                                        iconSize: 24,
-                                        elevation: 16,
-                                        onChanged: (String newValue) {
-                                          setState(() {
-                                            dropdownValue = newValue;
-                                          });
-                                        },
-                                        items: <String>['One', 'Two', 'Free', 'Four']
-                                            .map<DropdownMenuItem<String>>((String value) {
-                                          return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(value),
-                                          );
-                                        }).toList()
-                                    ),
-                                  ],
+                                child: DropdownButton<Item>(
+                                  hint:  Text("  Vehicle makers"),
+                                  value: selectCompany,
+                                  onChanged: (Item Value) {
+                                    setState(() {
+                                      selectCompany = Value;
+                                    });
+                                  },
+                                  items: companys.map((Item user) {
+                                    return  DropdownMenuItem<Item>(
+                                      value: user,
+                                      child: Row(
+                                        children: <Widget>[
+                                          user.icon,
+                                          SizedBox(width: 10,),
+                                          Text(
+                                            user.name,
+                                            style:  TextStyle(color: Colors.black),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
                                 ),
+
                               )
                           ),
                           SizedBox(height: 10,),
@@ -414,6 +408,51 @@ class _AddYourVehicle extends State<AddYourVehicle>{
                               child: InkWell(
                                 onTap: (){
 
+                                  VehicleMakeTypeDTO vehicleMakeTypeDto = new VehicleMakeTypeDTO(name: selectedType.toString());
+                                  VehicleTypeDTO vehicleTypeDto = new VehicleTypeDTO(name: selectCompany.toString());
+                                  VehicleDTO vehicleDto = new VehicleDTO(vehicleTypeId: 2,vehicleMakeType: vehicleMakeTypeDto,vehicleType: vehicleTypeDto,regNumber: vehicleNumberController.text,model: vehicleModelController.text,vehicleMakeId: 1,rCNumber: vehicleRCNumberController.text,oDOMeter: vehicleODOController.text,state: vehicleStateController.text,year: vehicleYearController.text,isActive: true,createdBy: 1);
+                                  RestService restService = new RestService();
+                                  restService.vehiclePost(vehicleDto).then((data){
+
+                                    if(data != null){
+
+                                      print(data);
+
+                                      FlutterToast.showToast(
+                                          msg:"Vehicle Added Successfully!",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+
+                                    }else{
+
+                                      FlutterToast.showToast(
+                                          msg:"Vehicle Adding Faild!",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+
+                                    }
+
+                                  }).catchError((onError){
+
+                                    FlutterToast.showToast(
+                                        msg:onError.toString(),
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.BOTTOM,
+                                        timeInSecForIosWeb: 1,
+                                        backgroundColor: Colors.red,
+                                        textColor: Colors.white,
+                                        fontSize: 16.0);
+
+                                  });
+
                                 },
                                 splashColor: Colors.green,
                                 child: Center(
@@ -430,6 +469,7 @@ class _AddYourVehicle extends State<AddYourVehicle>{
                               ),
                             ),
                           ),
+
                         ],
                       ),
                     ),
@@ -466,5 +506,8 @@ class _AddYourVehicle extends State<AddYourVehicle>{
       imageFile = croppedFile;
     });
   }
+
+
+
 
 }

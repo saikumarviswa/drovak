@@ -2,6 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:fluttertraffic/AddYourVehicle.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'VehiclesData/Vehicle.dart';
+import 'VehiclesData/VehicleItem.dart';
 
 class UserProfile extends StatefulWidget{
 
@@ -13,10 +17,32 @@ class UserProfile extends StatefulWidget{
 
 class _UserProfile extends State<UserProfile>{
 
+  SharedPreferences sharedPreferences;
+  String userName;
+  String mobileNumber;
+  String emailId;
+
+  @override
+  void initState(){
+    super.initState();
+    _loadCounter();
+  }
+
+  _loadCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+
+      userName = (prefs.getString('userName') ?? null);
+      mobileNumber = (prefs.getString('mobileNo') ?? null);
+      emailId = (prefs.getString('emailId') ?? null);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
 
     Size screenSize = MediaQuery.of(context).size;
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!! $userName , $mobileNumber , $emailId");
 
     return new Scaffold(
       appBar: AppBar(
@@ -64,7 +90,12 @@ class _UserProfile extends State<UserProfile>{
                     ),
                   ),
                   SizedBox(height: 20,),
-                  Text("Name",style: TextStyle(fontSize: 20,color: Colors.black),),
+                  Text(userName,style: TextStyle(fontSize: 20,color: Colors.black),),
+                  SizedBox(height: 20,),
+                  Text(mobileNumber,style: TextStyle(fontSize: 20,color: Colors.black),),
+                  SizedBox(height: 20,),
+                  Text(emailId,style: TextStyle(fontSize: 20,color: Colors.black),),
+
                 ],
               ),
             ),

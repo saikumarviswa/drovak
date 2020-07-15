@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertraffic/FadeAnimation.dart';
+import 'package:fluttertraffic/models/VehicleDTO.dart';
 
 import 'SingleVehicle.dart';
 import 'Vehicle.dart';
 
 class VehicleItem extends StatelessWidget {
 
-  final Vehicle vehicle;
+  final VehicleDTO vehicle;
 
   VehicleItem(this.vehicle);
 
@@ -17,11 +18,27 @@ class VehicleItem extends StatelessWidget {
           vertical: 16.0
       ),
       alignment: FractionalOffset.centerLeft,
-      child: new Image(
+      child: Container(
+        width: 92.0,
+        height: 92.0,
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: new AssetImage(vehicle.regNumber),
+            fit: BoxFit.cover,
+          ),
+          borderRadius: BorderRadius.circular(80.0),
+          border: Border.all(
+            color: Colors.white,
+            width: 2.0,
+          ),
+        ),
+
+      ),
+      /*new Image(
         image: new AssetImage(vehicle.image),
         height: 92.0,
         width: 92.0,
-      ),
+      )*/
     );
 
     final baseTextStyle = const TextStyle(
@@ -41,12 +58,22 @@ class VehicleItem extends StatelessWidget {
         fontWeight: FontWeight.w600
     );
 
+    Widget odoMeter({String value, String image}) {
+      return new Row(
+          children: <Widget>[
+            new Image.asset(image, height: 12.0),
+            new Container(width: 8.0),
+            new Text(vehicle.state, style: regularTextStyle),
+          ]
+      );
+    }
+
     Widget _planetValue({String value, String image}) {
       return new Row(
           children: <Widget>[
             new Image.asset(image, height: 12.0),
             new Container(width: 8.0),
-            new Text(vehicle.gravity, style: regularTextStyle),
+            new Text(vehicle.oDOMeter, style: regularTextStyle),
           ]
       );
     }
@@ -59,9 +86,9 @@ class VehicleItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           new Container(height: 4.0),
-          new Text(vehicle.name, style: headerTextStyle),
+          new Text(vehicle.model, style: headerTextStyle),
           new Container(height: 10.0),
-          new Text(vehicle.location, style: subHeaderTextStyle),
+          new Text(vehicle.regNumber, style: subHeaderTextStyle),
           new Container(
               margin: new EdgeInsets.symmetric(vertical: 8.0),
               width: 18.0,
@@ -70,14 +97,14 @@ class VehicleItem extends StatelessWidget {
           new Row(
             children: <Widget>[
               new Expanded(
-                  child: _planetValue(
-                      value: vehicle.distance,
+                  child: odoMeter(
+                      value: vehicle.oDOMeter,
                       image: 'assets/img/ic_distance.png')
 
               ),
               new Expanded(
                   child: _planetValue(
-                      value: vehicle.gravity,
+                      value: vehicle.state,
                       image: 'assets/img/ic_gravity.png')
               )
             ],
@@ -97,7 +124,7 @@ class VehicleItem extends StatelessWidget {
         borderRadius: new BorderRadius.circular(8.0),
         boxShadow: <BoxShadow>[
           new BoxShadow(
-            color: Colors.black12,
+            color: Colors.white,
             blurRadius: 10.0,
             offset: new Offset(0.0, 10.0),
           ),
@@ -122,7 +149,8 @@ class VehicleItem extends StatelessWidget {
             ),
 
             onTap: (){
-             // Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new SingleVehicle()));
+              print(vehicle.model);
+              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new SingleVehicle(vehicle: vehicle,)));
             },
 
           )

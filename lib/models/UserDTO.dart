@@ -1,63 +1,86 @@
+import 'package:fluttertraffic/common/common.util.dart';
+
+import 'RoleDTO.dart';
 import 'RoleDTO.dart';
 
 class UserDTO{
-  int Id;
-  int RoleId;
-  String Name;
-  String Password;
-  String MobileNo;
-  String EmailId;
-  bool IsActive;
-  int CreatedBy;
-  DateTime CreatedOn;
-  int UpdatedBy;
-  DateTime UpdatedOn;
-  RoleDTO Role;
+  int id;
+  int roleId;
+  String name;
+  String password;
+  String mobileNo;
+  String emailId;
+  bool isActive;
+  int createdBy;
+  String createdOn;
+  int updatedBy;
+  String updatedOn;
+  RoleDTO role;
 
-  UserDTO({this.Id,
-    this.RoleId,
-    this.Name,
-    this.Password,
-    this.MobileNo,
-    this.EmailId,
-    this.IsActive,
-    this.CreatedBy,
-    this.CreatedOn,
-    this.UpdatedBy,
-    this.UpdatedOn,
-    this.Role
+  UserDTO({this.id,
+    this.roleId,
+    this.name,
+    this.password,
+    this.mobileNo,
+    this.emailId,
+    this.isActive,
+    this.createdBy,
+    this.createdOn,
+    this.updatedBy,
+    this.updatedOn,
+    this.role
   });
 
   factory UserDTO.fromJson(Map<String ,dynamic> json){
 
     return UserDTO(
-      Id: json["Id"],
-      RoleId: json["RoleId"],
-      Name: json["Name"],
-      Password: json["Password"],
-      MobileNo: json["MobileNo"],
-      EmailId: json["EmailId"],
-      IsActive: json["IsActive"],
-      CreatedBy: json["CreatedBy"],
-      CreatedOn: json["CreatedOn"],
-      UpdatedBy: json["UpdatedBy"],
-      UpdatedOn: json["UpdatedOn"],
-      Role: json["Role"],
+      id: json["Id"],
+      roleId: json["RoleId"],
+      name: json["Name"],
+      password: json["Password"],
+      mobileNo: json["MobileNo"],
+      emailId: json["EmailId"],
+      isActive: json["IsActive"],
+      createdBy: json["CreatedBy"],
+      createdOn: json["CreatedOn"],
+      updatedBy: json["UpdatedBy"],
+      updatedOn: json["UpdatedOn"],
+      role: json["Role"]!=null? RoleDTO.fromJson(json["Role"]):null
     );
   }
 
   Map<String, dynamic> toJson() =>{
-    'Id' : Id,
-    'RoleId' : RoleId,
-    'Name' : Name,
-    'Password' : Password,
-    'MobileNo' : MobileNo,
-    'EmailId' : EmailId,
-    'IsActive' : IsActive,
-    'CreatedBy' : CreatedBy,
-    'CreatedOn' : CreatedOn,
-    'UpdatedBy' : UpdatedBy,
-    'UpdatedOn' : UpdatedOn,
-    'Role' : Role,
+    'Id' : id,
+    'RoleId' : roleId,
+    'Name' : name,
+    'Password' : password,
+    'MobileNo' : mobileNo,
+    'EmailId' : emailId,
+    'IsActive' : isActive,
+    'CreatedBy' : createdBy,
+    'CreatedOn' : createdOn,
+    'UpdatedBy' : updatedBy,
+    'UpdatedOn' : updatedOn,
+    'Role' : role!=null?role.toJson():null
   };
+
+   static List<UserDTO> parseToList(List<dynamic> dynamicList) {
+    if (dynamicList == null) return null;
+    List<Map<String, dynamic>> jsonArray =
+        CommonUtil.getListOfMaps(dynamicList);
+    List<UserDTO> ods = new List<UserDTO>();
+    for (Map<String, dynamic> odjson in jsonArray) {
+      ods.add(new UserDTO.fromJson(odjson));
+    }
+    return ods;
+  }
+
+  static List<Map<String, dynamic>> parseToMapArray(
+      List<UserDTO> odts) {
+    List<Map<String, dynamic>> odtarry = new List<Map<String, dynamic>>();
+    if (odts != null && odts.length > 0) {
+      odts.forEach((odt) => {odtarry.add(odt.toJson())});
+    }
+    return odtarry;
+  }
 }

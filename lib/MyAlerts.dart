@@ -19,6 +19,13 @@ class _MyAlerts extends State<MyAlerts>{
         title: Text("Notifications"),
         backgroundColor: Colors.orange[900],
       ),
+
+      body: Center(
+        child: Container(
+          child: Text(" No Notifications Available"),
+        ),
+
+      ),
     );
   }
 

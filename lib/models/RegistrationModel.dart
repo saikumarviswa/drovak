@@ -1,56 +1,74 @@
 
 
+import 'package:fluttertraffic/common/common.util.dart';
+
 class RegistrationModel{
 
-  String Name;
-  String MobileNo;
-  String Gender;
-  String EmailId;
-  String City;
-  bool IsActive;
-  String Password;
-  int RoleId;
-  int CreatedBy;
+  String name;
+  String mobileNo;
+  String gender;
+  String emailId;
+  String city;
+  bool isActive;
+  String password;
+  int roleId;
+  int createdBy;
 
-  RegistrationModel({this.Name,
-    this.MobileNo,
-    this.Gender,
-    this.EmailId,
-    this.City,
-    this.IsActive,
-    this.Password,
-    this.RoleId,
-    this.CreatedBy
+  RegistrationModel({this.name,
+    this.mobileNo,
+    this.gender,
+    this.emailId,
+    this.city,
+    this.isActive,
+    this.password,
+    this.roleId,
+    this.createdBy
   });
 
   factory RegistrationModel.fromJson(Map<String , dynamic> json){
     return RegistrationModel(
-      Name: json["Name"],
-      MobileNo: json["MobileNo"],
-      Gender: json["Gender"],
-      EmailId: json["EmailId"],
-      City: json["City"],
-      IsActive: json["IsActive"],
-      Password: json["Password"],
-      RoleId: json["RoleId"],
-      CreatedBy: json["CreatedBy"],
+      name: json["Name"],
+      mobileNo: json["MobileNo"],
+      gender: json["Gender"],
+      emailId: json["EmailId"],
+      city: json["City"],
+      isActive: json["IsActive"],
+      password: json["Password"],
+      roleId: json["RoleId"],
+      createdBy: json["CreatedBy"],
 
     );
   }
 
   Map<String, dynamic> toJson() =>{
-
-    'Name' : Name,
-    'MobileNo' : MobileNo,
-    'Gender' : Gender,
-    'EmailId' : EmailId,
-    'City' : City,
-    'IsActive' : IsActive,
-    'Password' : Password,
-    'RoleId' : RoleId,
-    'CreatedBy' : CreatedBy,
-
-
+    'Name' : name,
+    'MobileNo' : mobileNo,
+    'Gender' : gender,
+    'EmailId' : emailId,
+    'City' : city,
+    'IsActive' : isActive,
+    'Password' : password,
+    'RoleId' : roleId,
+    'CreatedBy' : createdBy
   };
 
+  static List<RegistrationModel> parseToList(List<dynamic> dynamicList) {
+    if (dynamicList == null) return null;
+    List<Map<String, dynamic>> jsonArray =
+        CommonUtil.getListOfMaps(dynamicList);
+    List<RegistrationModel> ods = new List<RegistrationModel>();
+    for (Map<String, dynamic> odjson in jsonArray) {
+      ods.add(new RegistrationModel.fromJson(odjson));
+    }
+    return ods;
+  }
+
+  static List<Map<String, dynamic>> parseToMapArray(
+      List<RegistrationModel> odts) {
+    List<Map<String, dynamic>> odtarry = new List<Map<String, dynamic>>();
+    if (odts != null && odts.length > 0) {
+      odts.forEach((odt) => {odtarry.add(odt.toJson())});
+    }
+    return odtarry;
+  }
 }

@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fluttertraffic/LogInWithOTP.dart';
 import 'package:fluttertraffic/RegisterUser.dart';
 import 'package:fluttertraffic/common/rest.service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'FadeAnimation.dart';
 import 'Home.dart';
@@ -132,7 +133,7 @@ class LoginPage extends StatelessWidget {
                                           fontSize: 16.0
                                       );
                                       RestService restService = new RestService();
-                                      restService.getUser(userNameController.text, passwordController.text).then((onValue){
+                                      restService.getUser(userNameController.text, passwordController.text).then((onValue) async {
                                         print("@@@@@@@@@@@@@@@@@@@@@@@@ $onValue");
                                         if(onValue != null){
                                           FlutterToast.showToast(
@@ -144,6 +145,11 @@ class LoginPage extends StatelessWidget {
                                               textColor: Colors.white,
                                               fontSize: 16.0
                                           );
+                                          SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                                          sharedPreferences.setString("userName", onValue.name);
+                                          print("ZZZZZZZZZZZZZZZ ${onValue.emailId}");
+                                          sharedPreferences.setString("mobileNo", onValue.mobileNo);
+                                          sharedPreferences.setString("emailId", onValue.emailId);
                                           Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new HomePage()));
                                         }else{
 
@@ -158,10 +164,11 @@ class LoginPage extends StatelessWidget {
                                           );
 
                                         }
-                                      }).catchError((onError){
+                                      })/*.catchError((onError){
+                                        print(onError.toString());
 
                                         FlutterToast.showToast(
-                                            msg: "Error",
+                                            msg: onError.toString(),
                                             toastLength: Toast.LENGTH_SHORT,
                                             gravity: ToastGravity.BOTTOM,
                                             timeInSecForIosWeb: 1,
@@ -170,11 +177,12 @@ class LoginPage extends StatelessWidget {
                                             fontSize: 16.0
                                         );
 
-                                      });
+                                      })*/;
 
                                       /*Route route = MaterialPageRoute(builder: (context) => HomePage());
                                       Navigator.pushReplacement(context, route);*/
-                                     /* Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new HomePage()));*/
+                                      //Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new HomePage()));
+                                      //Navigator.pushReplacement(context, new MaterialPageRoute(builder: (BuildContext context) => new HomePage()));
                                       },
                                       child: Center(
                                         child: Text("Login", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),
